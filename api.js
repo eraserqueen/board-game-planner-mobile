@@ -1,5 +1,6 @@
 import Expo from 'expo';
 import uuid from 'uuid';
+import _ from 'lodash';
 
 const {manifest} = Expo.Constants;
 const api = manifest.packagerOpts.dev ? manifest.debuggerHost.split(':').shift().concat(':3000') : 'http://produrl.com';
@@ -15,6 +16,7 @@ export function getEvents(){
             dateTimeStart: new Date(event.dateTimeStart),
             dateTimeEnd: new Date(event.dateTimeEnd),
         })))
+        .then(events => _.orderBy(events, 'dateTimeStart', 'asc'))
         .catch(error => console.error(error));
 }
 

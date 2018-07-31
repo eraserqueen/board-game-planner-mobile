@@ -49,13 +49,13 @@ const styles = StyleSheet.create({
 class EventForm extends Component {
     state = {
         showDatePicker: false,
-        dateTimeStart: '',
-        dateTimeEnd: '',
-        datePickerTarget: '',
-        datePickerInitialValue: new Date()
+        dateTimeStart: null,
+        dateTimeEnd: null,
+        datePickerTarget: null,
+        datePickerInitialValue: new Date(),
+        datePickerMinimumDate: new Date(),
     }
     componentDidMount() {
-        console.log(this.props.navigation.state);
         if (this.props.navigation.state.routeName == 'editForm') {
             this.setState(this.props.navigation.state.params);
         }
@@ -63,14 +63,19 @@ class EventForm extends Component {
     
     handleDatePress = (datePickerTarget) => {
         let datePickerInitialValue = new Date();
-        if (this.state[datePickerTarget] != '') {
+        let datePickerMinimumDate = new Date();
+        if (this.state[datePickerTarget]) {
             datePickerInitialValue = new Date(this.state[datePickerTarget]);
         }
-        console.log('init date to ', datePickerInitialValue);
+        if(datePickerTarget == 'dateTimeEnd') {
+            datePickerMinimumDate = this.state.dateTimeStart || new Date();
+            datePickerInitialValue = new Date(Math.max(datePickerInitialValue.valueOf(),this.state.dateTimeStart.valueOf()));
+        }
         this.setState({
             showDatePicker: true,
             datePickerTarget,
-            datePickerInitialValue
+            datePickerInitialValue,
+            datePickerMinimumDate
         });
     }
     handleDatePicked = (value) => {
@@ -123,6 +128,7 @@ class EventForm extends Component {
                         onConfirm={this.handleDatePicked}
                         onCancel={this.handleDatePickerHide}
                         date={this.state.datePickerInitialValue}
+                        minimumDate={this.state.datePickerMinimumDate}
                     />
                 </View>
                 <TouchableHighlight onPress={this.handleAddPress} style={[styles.button, styles.createButton]}>

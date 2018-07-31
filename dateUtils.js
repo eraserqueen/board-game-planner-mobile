@@ -2,7 +2,7 @@ import moment from 'moment';
 
 
 const formatDate = (str) => {
-    if(str == '') {
+    if(!str) {
         return '';
     }
     const date = moment(str);
@@ -13,7 +13,7 @@ const formatDate = (str) => {
 };
 
 const formatDateTime = (str) => {
-    if(str == '') {
+    if(!str) {
         return '';
     }
     const date = moment(str);
