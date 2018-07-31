@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { formatDate, formatTimeRange } from './dateUtils';
+import { formatDate, formatTimeRange } from '../utils/dateUtils';
 
 const styles = StyleSheet.create({
     card: {

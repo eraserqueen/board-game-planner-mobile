@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import EventList from './EventList';
-import EventForm from './EventForm';
+import EventList from './src/components/EventList';
+import EventForm from './src/components/EventForm';
 import {createStackNavigator} from 'react-navigation';
 
 export default createStackNavigator({

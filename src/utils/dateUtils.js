@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-
 const formatDate = (str) => {
     if(!str) {
         return '';
