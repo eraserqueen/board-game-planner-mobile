@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FlatList, StyleSheet, TouchableHighlight} from 'react-native';
 import EventCard from './EventCard';
 import ActionButton from 'react-native-action-button';
-import { getEvents } from '../data/api';
+import {getEvents, getGame} from '../data/api';
 
 const styles = StyleSheet.create({
     list: {
@@ -12,35 +12,43 @@ const styles = StyleSheet.create({
     }
 });
 
+
 class EventList extends Component {
     state = {
         events: []
-    }
+    };
     componentDidMount() {
         this.props.navigation.addListener('didFocus', () => {
-            getEvents().then(events => this.setState({events}));
+            getEvents()
+                .then(events =>
+                    events.map(event => {
+                        if (!event.schedule) {
+                            return event;
+                        }
+                        const schedule = [];
+                        event.schedule.map(slot => getGame(slot.gameId).then(game => schedule.push({
+                            order: slot.order,
+                            ...game
+                        })));
+                        return {...event, schedule};
+                    }))
+                .then(events => this.setState({events}));
         });
-    }
+    };
     handleAddEvent = () => {
-        this.props.navigation.navigate('createForm');
-    }
-    handleEventPress = (event) => {
-        this.props.navigation.navigate('editForm', event);
-
-    }
+        this.props.navigation.navigate('createEvent');
+    };
+    handleEditEvent = (event) => {
+        console.log('handleEditEvent', event);
+        this.props.navigation.navigate('editEvent', event);
+    };
     render() {
         return [
             <FlatList
                 key="flatlist"
                 style={styles.list}
                 data={this.state.events}
-                renderItem={({ item }) => {
-                    return (
-                        <TouchableHighlight onPress={() => this.handleEventPress(item)}>
-                            <EventCard event={item} />
-                        </TouchableHighlight>
-                    );
-                }}
+                renderItem={({ item }) => <EventCard event={item} onEdit={() => this.handleEditEvent(item)}/>}
                 keyExtractor={item => item.id}
             />,
             <ActionButton

@@ -3,8 +3,10 @@ import { View, Text, TouchableHighlight, TextInput, StyleSheet } from 'react-nat
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { formatDateTime } from '../utils/dateUtils';
 import { saveEvent, deleteEvent } from '../data/api';
+import buttonStyles from '../styles/button';
 
 const styles = StyleSheet.create({
+    ...buttonStyles,
     fieldContainer: {
         marginTop: 20,
         marginBottom: 20,
@@ -16,30 +18,6 @@ const styles = StyleSheet.create({
         marginRight: 7,
         marginLeft: 10
     },
-    button: {
-        height: 50,
-        alignSelf: 'stretch',
-        margin: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5
-    },
-    createButton: {
-        backgroundColor: '#48BBEC',
-        borderColor: '#48BBEC',
-    },
-    cancelButton: {
-        backgroundColor: '#ccc',
-        borderColor: '#ccc',
-    },
-    deleteButton: {
-        backgroundColor: '#cc3333',
-        borderColor: '#cc3333',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18
-    },
     borderTop: {
         borderColor: '#eefeff',
         borderTopWidth: 0.5
@@ -48,15 +26,16 @@ const styles = StyleSheet.create({
 
 class EventForm extends Component {
     state = {
+        hasChanged: false,
         showDatePicker: false,
         dateTimeStart: null,
         dateTimeEnd: null,
         datePickerTarget: null,
         datePickerInitialValue: new Date(),
         datePickerMinimumDate: new Date(),
-    }
+    };
     componentDidMount() {
-        if (this.props.navigation.state.routeName == 'editForm') {
+        if (this.props.navigation.state.routeName == 'editEvent') {
             this.setState(this.props.navigation.state.params);
         }
     }
@@ -72,12 +51,13 @@ class EventForm extends Component {
             datePickerInitialValue = new Date(Math.max(datePickerInitialValue.valueOf(),this.state.dateTimeStart.valueOf()));
         }
         this.setState({
+            hasChanged:true,
             showDatePicker: true,
             datePickerTarget,
             datePickerInitialValue,
             datePickerMinimumDate
         });
-    }
+    };
     handleDatePicked = (value) => {
         const newState = {
             showDatePicker: false,
@@ -86,23 +66,24 @@ class EventForm extends Component {
         };
         newState[this.state.datePickerTarget] = new Date(value);
         this.setState(newState);
-    }
+    };
     handleDatePickerHide = () => {
         this.setState({ showDatePicker: false, datePickerTarget: '' });
-    }
+    };
     handleAddPress = () => {
         saveEvent(this.state).then(res =>
             this.props.navigation.goBack()
         );
-    }
+    };
     handleDeletePress = () => {
         deleteEvent(this.state.id).then(res =>
             this.props.navigation.goBack()
         );
-    }
+    };
+    handleCancelPress = () => this.props.navigation.goBack();
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, flexDirection: 'column' }}>
                 <View style={styles.fieldContainer}>
                     <TextInput
                         key="dateTimeStart"
@@ -133,6 +114,9 @@ class EventForm extends Component {
                 </View>
                 <TouchableHighlight onPress={this.handleAddPress} style={[styles.button, styles.createButton]}>
                     <Text style={styles.buttonText}>{this.state.id ? 'Update' : 'Add'}</Text>
+                </TouchableHighlight>
+                <TouchableHighlight onPress={this.handleCancelPress} style={[styles.button, styles.cancelButton]}>
+                    <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableHighlight>
                 <TouchableHighlight onPress={this.handleDeletePress} style={[styles.button, this.state.id ? styles.deleteButton : styles.cancelButton]}>
                     <Text style={styles.buttonText}>{this.state.id ? 'Delete' : 'Cancel'}</Text>

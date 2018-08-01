@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import EventList from './src/components/EventList';
 import EventForm from './src/components/EventForm';
 import {createStackNavigator} from 'react-navigation';
@@ -11,13 +10,13 @@ export default createStackNavigator({
       title: 'Events'
     })
   },
-  createForm: {
+  createEvent: {
     screen: EventForm,
     navigationOptions: () => ({
       title: 'Create event'
     })
   },
-  editForm: {
+  editEvent: {
     screen: EventForm,
     navigationOptions: () => ({
       title: 'Edit event'
