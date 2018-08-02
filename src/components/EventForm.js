@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableHighlight, TextInput, StyleSheet } from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, TouchableHighlight, TextInput, StyleSheet} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import { formatDateTime } from '../utils/dateUtils';
-import { saveEvent, deleteEvent } from '../data/api';
+import {formatDateTime} from '../utils/dateUtils';
+import {saveEvent, deleteEvent} from '../data/api';
 import buttonStyles from '../styles/button';
+import Button from "./Button";
 
 const styles = StyleSheet.create({
     ...buttonStyles,
@@ -34,24 +35,25 @@ class EventForm extends Component {
         datePickerInitialValue: new Date(),
         datePickerMinimumDate: new Date(),
     };
+
     componentDidMount() {
         if (this.props.navigation.state.routeName == 'editEvent') {
             this.setState(this.props.navigation.state.params);
         }
     }
-    
+
     handleDatePress = (datePickerTarget) => {
         let datePickerInitialValue = new Date();
         let datePickerMinimumDate = new Date();
         if (this.state[datePickerTarget]) {
             datePickerInitialValue = new Date(this.state[datePickerTarget]);
         }
-        if(datePickerTarget == 'dateTimeEnd') {
+        if (datePickerTarget == 'dateTimeEnd') {
             datePickerMinimumDate = this.state.dateTimeStart || new Date();
-            datePickerInitialValue = new Date(Math.max(datePickerInitialValue.valueOf(),this.state.dateTimeStart.valueOf()));
+            datePickerInitialValue = new Date(Math.max(datePickerInitialValue.valueOf(), this.state.dateTimeStart.valueOf()));
         }
         this.setState({
-            hasChanged:true,
+            hasChanged: true,
             showDatePicker: true,
             datePickerTarget,
             datePickerInitialValue,
@@ -68,7 +70,7 @@ class EventForm extends Component {
         this.setState(newState);
     };
     handleDatePickerHide = () => {
-        this.setState({ showDatePicker: false, datePickerTarget: '' });
+        this.setState({showDatePicker: false, datePickerTarget: ''});
     };
     handleAddPress = () => {
         saveEvent(this.state).then(res =>
@@ -81,9 +83,10 @@ class EventForm extends Component {
         );
     };
     handleCancelPress = () => this.props.navigation.goBack();
+
     render() {
         return (
-            <View style={{ flex: 1, flexDirection: 'column' }}>
+            <View style={{flex: 1, flexDirection: 'column'}}>
                 <View style={styles.fieldContainer}>
                     <TextInput
                         key="dateTimeStart"
@@ -112,15 +115,15 @@ class EventForm extends Component {
                         minimumDate={this.state.datePickerMinimumDate}
                     />
                 </View>
-                <TouchableHighlight onPress={this.handleAddPress} style={[styles.button, styles.createButton]}>
-                    <Text style={styles.buttonText}>{this.state.id ? 'Update' : 'Add'}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={this.handleCancelPress} style={[styles.button, styles.cancelButton]}>
-                    <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={this.handleDeletePress} style={[styles.button, this.state.id ? styles.deleteButton : styles.cancelButton]}>
-                    <Text style={styles.buttonText}>{this.state.id ? 'Delete' : 'Cancel'}</Text>
-                </TouchableHighlight>
+                <Button onPress={this.handleAddPress} style={styles.createButton}
+                        text={this.state.id ? 'Update' : 'Add'}/>
+                <Button onPress={this.handleCancelPress}
+                        style={styles.cancelButton}
+                        text="Cancel"/>
+                <Button onPress={this.handleDeletePress}
+                        style={this.state.id ? styles.deleteButton : styles.cancelButton}
+                        text={this.state.id ? 'Delete' : 'Cancel'}
+                />
             </View>
 
         );

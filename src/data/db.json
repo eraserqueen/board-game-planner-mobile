@@ -28,17 +28,36 @@
   ],
   "events": [
     {
-      "id": "c5a10130-6252-4acd-9622-39eae72720de",
-      "dateTimeStart": "2018-08-03T00:57:57.000Z",
-      "dateTimeEnd": "2018-08-03T02:57:57.000Z",
+      "id": "40e187c7-7087-4c5a-b726-965819e66beb",
+      "dateTimeStart": "2018-08-12T04:00:57.000Z",
+      "dateTimeEnd": "2018-08-12T12:00:57.000Z",
+      "playerPreferences": [
+        {
+          "playerName": "Dom",
+          "preferences": [
+            {
+              "order": 1,
+              "gameId": "a6cde340-173e-4f8a-af6f-f6a08ea1e23a"
+            },
+            {
+              "order": 2,
+              "gameId": "d2289e6a-e537-4061-8dca-23c148efe60d"
+            },
+            {
+              "order": 3,
+              "gameId": "8669904c-4e77-4db3-b01a-c1a9a712c7bd"
+            }
+          ]
+        }
+      ],
       "schedule": [
         {
           "order": 1,
-          "gameId": "d2289e6a-e537-4061-8dca-23c148efe60d"
+          "gameId": "a6cde340-173e-4f8a-af6f-f6a08ea1e23a"
         },
         {
           "order": 2,
-          "gameId": "a71a8769-3bc0-4d3c-b144-2acba9d5468d"
+          "gameId": "d2289e6a-e537-4061-8dca-23c148efe60d"
         },
         {
           "order": 3,
@@ -47,9 +66,28 @@
       ]
     },
     {
-      "id": "40e187c7-7087-4c5a-b726-965819e66beb",
-      "dateTimeStart": "2018-07-31T01:01:59.409Z",
-      "dateTimeEnd": "2018-07-31T12:01:59.000Z"
+      "id": "c5a10130-6252-4acd-9622-39eae72720de",
+      "dateTimeStart": "2018-08-31T08:00:59.409Z",
+      "dateTimeEnd": "2018-08-31T12:00:59.000Z",
+      "playerPreferences": [
+        {
+          "playerName": "Gilles",
+          "preferences": [
+            {
+              "order": 1,
+              "gameId": "d2289e6a-e537-4061-8dca-23c148efe60d"
+            },
+            {
+              "order": 2,
+              "gameId": "a71a8769-3bc0-4d3c-b144-2acba9d5468d"
+            },
+            {
+              "order": 3,
+              "gameId": "8669904c-4e77-4db3-b01a-c1a9a712c7bd"
+            }
+          ]
+        }
+      ]
     }
   ],
   "players": [
@@ -64,26 +102,6 @@
     },
     {
       "name": "Carla"
-    }
-  ],
-  "playerPreferences": [
-    {
-      "playerName": "Dom",
-      "eventId": "c5a10130-6252-4acd-9622-39eae72720de",
-      "preferences": [
-        {
-          "order": 1,
-          "gameId": "d2289e6a-e537-4061-8dca-23c148efe60d"
-        },
-        {
-          "order": 2,
-          "gameId": "a71a8769-3bc0-4d3c-b144-2acba9d5468d"
-        },
-        {
-          "order": 3,
-          "gameId": "8669904c-4e77-4db3-b01a-c1a9a712c7bd"
-        }
-      ]
     }
   ]
 }

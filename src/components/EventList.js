@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { FlatList, StyleSheet, TouchableHighlight} from 'react-native';
+import React, {Component} from 'react';
+import {FlatList, StyleSheet} from 'react-native';
 import EventCard from './EventCard';
 import ActionButton from 'react-native-action-button';
 import {getEvents, getGame} from '../data/api';
@@ -32,20 +32,22 @@ class EventList extends Component {
                         })));
                         return {...event, schedule};
                     }))
-                .then(events => this.setState({events}));
+                .then(events => {
+                    console.log(events);
+                    return this.setState({events});
+                });
         });
     };
     handleAddEvent = () => {
         this.props.navigation.navigate('createEvent');
     };
     handleEditEvent = (event) => {
-        console.log('handleEditEvent', event);
         this.props.navigation.navigate('editEvent', event);
     };
     render() {
         return [
             <FlatList
-                key="flatlist"
+                key="eventList"
                 style={styles.list}
                 data={this.state.events}
                 renderItem={({ item }) => <EventCard event={item} onEdit={() => this.handleEditEvent(item)}/>}

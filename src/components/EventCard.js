@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet, FlatList, TouchableHighlight} from 'react-native';
+import React from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {formatDate, formatTimeRange} from '../utils/dateUtils';
 import GameIcon from "./GameIcon";
 import buttonStyles from '../styles/button';
+import Button from "./Button";
 
 const styles = StyleSheet.create({
     ...buttonStyles,
@@ -28,33 +29,55 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         marginBottom: 5
-    }
+    },
+    playersList: {}
 });
 
-export default function EventCard({event, onEdit, onSetPreferences}) {
+export default function EventCard({event, onEdit, onPlayerJoin, onPlayerQuit}) {
     return (
         <View style={styles.eventCard}>
             <View style={styles.eventCardHeader}>
-                <View style={{flex:2}}>
+                <View style={{flex: 2}}>
                     <Text style={{fontSize: 20}}>{formatDate(event.dateTimeStart)}</Text>
                     <Text>{formatTimeRange(event.dateTimeStart, event.dateTimeEnd)}</Text>
                 </View>
-                <TouchableHighlight onPress={onEdit} style={[styles.button, styles.editButton, {flex:1}]}>
-                    <Text style={[styles.buttonText, {fontSize:15}]}>Edit Event</Text>
-                </TouchableHighlight>
-            </View>
-            {event.schedule
-                ? <FlatList
-                    key="gameslist"
-                    style={styles.gamesList}
-                    data={event.schedule}
-                    renderItem={({item}) => <GameIcon game={item}/>}
-                    keyExtractor={item => item.id}
+                <Button
+                    onPress={onEdit}
+                    style={[styles.editButton, {flex: 1}]}
+                    textStyle={{fontSize: 15}}
+                    text="Edit Event"
                 />
-                : <TouchableHighlight onPress={onSetPreferences}
-                                      style={[styles.button, styles.createButton, {marginLeft:0,marginRight:0}]}>
-                    <Text style={styles.buttonText}>Set game preferences</Text>
-                </TouchableHighlight>
+            </View>
+            {event.playerPreferences &&
+            <View style={{flex: 1, flexDirection: 'row'}}>
+                <Text>players: </Text>Text>
+                <FlatList
+                    listKey={`${event.id}-playersList`}
+                    style={styles.playersList}
+                    data={event.playerPreferences}
+                    renderItem={({item}) => <Text>{item.playerName}</Text>}
+                    keyExtractor={item => item.playerName}
+                />
+            </View>
+            }
+            {event.schedule
+                ? <View>
+                    <FlatList
+                        listKey={`${event.id}-gamesList`}
+                        style={styles.gamesList}
+                        data={event.schedule}
+                        renderItem={({item}) => <GameIcon game={item}/>}
+                        keyExtractor={item => item.id}
+                    />
+                    <Button onPress={onPlayerQuit}
+                            style={[styles.deleteButton, {marginLeft: 0, marginRight: 0}]}
+                            text="Leave"
+                    />
+                </View>
+                : <Button onPress={onPlayerJoin}
+                          style={[styles.createButton, {marginLeft: 0, marginRight: 0}]}
+                          text="Join"
+                />
             }
         </View>
     );
@@ -68,6 +91,13 @@ EventCard.propTypes = {
         schedule: PropTypes.arrayOf(PropTypes.shape({
             order: PropTypes.number,
             gameId: PropTypes.string,
+        })),
+        playerPreferences: PropTypes.arrayOf(PropTypes.shape({
+            playerName: PropTypes.string,
+            preferences: PropTypes.arrayOf(PropTypes.shape({
+                order: PropTypes.number,
+                gameId: PropTypes.string,
+            }))
         }))
     })
 };
