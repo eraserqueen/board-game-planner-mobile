@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import connect from "react-redux/es/connect/connect";
+import {getGameDetails} from "../actions/games";
 
 const styles = StyleSheet.create({
     gameCard: {
@@ -29,16 +31,29 @@ const styles = StyleSheet.create({
 
 });
 
-export function GameIcon({game}) {
-    return (
-        <View style={styles.gameCard}>
-            <Text style={styles.orderNum}>{game.order}</Text>
-            {game.image &&
-            <Image source={{uri: game.image}} style={styles.image}/>
-            }
-            <Text style={styles.title}>{game.title}</Text>
 
-        </View>);
+class GameIcon extends Component {
+    render() {
+        const {game} = this.props;
+        return (
+            <View style={styles.gameCard}>
+                <Text style={styles.orderNum}>{game.order}</Text>
+                {game.image &&
+                <Image source={{uri: game.image}} style={styles.image}/>
+                }
+                <Text style={styles.title}>{game.title}</Text>
+
+            </View>);
+    }
 }
 
-export default GameIcon;
+
+const mapStateToProps = (state, ownProps) => {
+    if(state.games.isFetching || !state.games.list) {
+        return ownProps;
+    }
+    return {
+        game: Object.assign({}, ownProps.game, state.games.list[ownProps.game.gameId])
+    };
+};
+export default connect(mapStateToProps)(GameIcon);

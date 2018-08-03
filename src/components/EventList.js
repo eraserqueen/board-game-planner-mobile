@@ -2,34 +2,15 @@ import React, {Component} from 'react';
 import {FlatList, ScrollView} from 'react-native';
 import EventCard from './EventCard';
 import ActionButton from 'react-native-action-button';
-import {getEvents, getGame} from '../data/api';
 import UserHeader from "./UserHeader";
+import connect from "react-redux/es/connect/connect";
+import {getAllEvents} from "../actions/events";
 
 
 class EventList extends Component {
-    state = {
-        events: []
-    };
     componentDidMount() {
         this.props.navigation.addListener('didFocus', () => {
-            getEvents()
-                .then(events =>
-                    events.map(event => {
-                        if (!event.schedule) {
-                            return event;
-                        }
-                        console.log('get schedule');
-                        const schedule = [];
-                        event.schedule.map(slot => getGame(slot.gameId).then(game => schedule.push({
-                            order: slot.order,
-                            ...game
-                        })));
-                        return {...event, schedule};
-                    }))
-                .then(events => {
-                    console.log(events);
-                    return this.setState({events});
-                });
+            this.props.getAllEvents();
         });
     };
     handleAddEvent = () => {
@@ -39,13 +20,13 @@ class EventList extends Component {
         this.props.navigation.navigate('editEvent', event);
     };
     render() {
-        console.log(this.props);
         return [
-            <ScrollView style={{padding: 15, paddingLeft:10, paddingRight:10}}>
+            <ScrollView key="main" style={{padding: 15, paddingLeft:10, paddingRight:10}}>
                 <UserHeader />
+                {this.props.isFetching && <Text>Loading...</Text>}
                 <FlatList
                     key="eventList"
-                    data={this.state.events}
+                    data={this.props.events}
                     renderItem={({ item }) => <EventCard event={item} onEdit={() => this.handleEditEvent(item)}/>}
                     keyExtractor={item => item.id}
                 />
@@ -59,4 +40,18 @@ class EventList extends Component {
     }
 }
 
-export default EventList;
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        ...ownProps,
+        events: state.events.list,
+        isFetching: state.isFetching
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getAllEvents: () => { dispatch(getAllEvents()); }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(EventList);

@@ -1,17 +1,15 @@
 import Expo from 'expo';
 import uuid from 'uuid';
 import _ from 'lodash';
+import fetch from 'cross-fetch';
 
 const {manifest} = Expo.Constants;
 const api = manifest.packagerOpts.dev ? manifest.debuggerHost.split(':').shift().concat(':3000') : 'http://produrl.com';
 
 const baseUrl = `http://${api}`;
 
-export function getGame(id) {
-    if(!id) {
-        return Promise.reject('no game id provided');
-    }
-    const url = `${baseUrl}/games/${id}`;
+export function getGames() {
+    const url = `${baseUrl}/games`;
     console.log('fetch', url);
     return fetch(url)
         .then(response => response.json())
