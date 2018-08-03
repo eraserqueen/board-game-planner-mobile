@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
     ...buttonStyles,
     eventCard: {
         flex: 1,
-        margin: 10,
+        marginTop: 10,
+        marginBottom: 10,
         padding: 15,
         backgroundColor: '#ffffff',
         borderRadius: 5
@@ -30,7 +31,10 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         marginBottom: 5
     },
-    playersList: {}
+    playersList: {
+        flex:1,
+        flexDirection:'row'
+    }
 });
 
 export default function EventCard({event, onEdit, onPlayerJoin, onPlayerQuit}) {
@@ -50,12 +54,12 @@ export default function EventCard({event, onEdit, onPlayerJoin, onPlayerQuit}) {
             </View>
             {event.playerPreferences &&
             <View style={{flex: 1, flexDirection: 'row'}}>
-                <Text>players: </Text>Text>
+                <Text>players: </Text>
                 <FlatList
                     listKey={`${event.id}-playersList`}
                     style={styles.playersList}
                     data={event.playerPreferences}
-                    renderItem={({item}) => <Text>{item.playerName}</Text>}
+                    renderItem={({item}) => <Text style={{flex:1}}>{item.playerName}</Text>}
                     keyExtractor={item => item.playerName}
                 />
             </View>
