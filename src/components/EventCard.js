@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import PropTypes from 'prop-types';
 import {formatDate, formatTimeRange} from '../utils/dateUtils';
-import GameIcon from "./GameIcon";
 import buttonStyles from '../styles/button';
 import Button from "./Button";
+import PlayerPanel from "./PlayerPanel";
+import PlayerPreferences from "./PlayerPreferences";
+import Schedule from "./Schedule";
 
 const styles = StyleSheet.create({
     ...buttonStyles,
@@ -28,16 +30,8 @@ const styles = StyleSheet.create({
         height: 40,
         margin: 0
     },
-    gamesList: {
-        flex: 1,
-        flexDirection: 'column',
-        marginBottom: 5
-    },
-    playersList: {
-        flex: 1,
-        flexDirection: 'row'
-    }
 });
+
 
 class EventCard extends Component {
     render() {
@@ -57,33 +51,13 @@ class EventCard extends Component {
                     />
                 </View>
                 {event.participants &&
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <Text>players: </Text>
-                    <FlatList
-                        listKey={`${event.id}-playersList`}
-                        style={styles.playersList}
-                        data={event.participants}
-                        renderItem={({item}) => <Text style={{flex: 1}}>{item}</Text>}
-                    />
-                </View>
+                    <PlayerPanel participants={event.participants}/>
                 }
                 {event.schedule &&
-                    <FlatList
-                        listKey={`${event.id}-gamesList`}
-                        style={styles.gamesList}
-                        data={event.schedule}
-                        renderItem={({item}) => <GameIcon game={item}/>}
-                        keyExtractor={item => `${event.id}-slot-${item.order}`}
-                    />
+                    <Schedule eventId={event.id} schedule={event.schedule}/>
                 }
                 {!event.schedule && currentUser.preferences &&
-                    <FlatList
-                        listKey={`${event.id}-preferences`}
-                        style={styles.gamesList}
-                        data={currentUser.preferences}
-                        renderItem={({item}) => <GameIcon game={item}/>}
-                        keyExtractor={item => `${event.id}-pref-${item.order}`}
-                    />
+                    <PlayerPreferences eventId={event.id} preferences={currentUser.preferences}/>
                 }
                 {currentUser.isParticipant
                     ? <Button onPress={onPlayerQuit}

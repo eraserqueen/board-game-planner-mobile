@@ -10,7 +10,6 @@ const baseUrl = `http://${api}`;
 
 export function getGames() {
     const url = `${baseUrl}/games`;
-    console.log('fetch', url);
     return fetch(url)
         .then(response => response.json())
         .catch(error => console.error(error));
@@ -19,7 +18,6 @@ export function getGames() {
 
 export function getEvents(){
     let url = `${baseUrl}/events`;
-    console.log('fetch', url);
     return fetch(url)
         .then(response => response.json())
         .then(json => json.map(event => {
@@ -44,7 +42,6 @@ export function saveEvent({id, dateTimeStart, dateTimeEnd}) {
         id = uuid();
         method = 'POST';
     }
-    console.log('fetch', url);
     return fetch(url, {
         method,
         headers: new Headers({

@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: 5,
         marginBottom: 5,
-        backgroundColor: '#cdedf5',
+        backgroundColor: '#c8f5d3',
         flex: 1,
         flexDirection: 'row',
         borderRadius: 5,
@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
 
 class GameIcon extends Component {
     render() {
-        const {game} = this.props;
+        const {game, style} = this.props;
         return (
-            <View style={styles.gameCard}>
+            <View style={[styles.gameCard, style]}>
                 <Text style={styles.orderNum}>{game.order}</Text>
                 {game.image &&
                 <Image source={{uri: game.image}} style={styles.image}/>

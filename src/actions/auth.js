@@ -1,5 +1,4 @@
 export const login = (username, password) => {
-    console.log('actions/auth/login');
     return {
         type: 'LOGIN',
         username: username,
@@ -8,7 +7,6 @@ export const login = (username, password) => {
 };
 
 export const logout = () => {
-    console.log('actions/auth/logout');
     return {
         type: 'LOGOUT'
     };
