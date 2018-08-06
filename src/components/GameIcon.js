@@ -38,18 +38,18 @@ class GameIcon extends Component {
         return (
             <View style={[styles.gameCard, style]}>
                 <Text style={styles.orderNum}>{game.order}</Text>
-                {game.image &&
-                <Image source={{uri: game.image}} style={styles.image}/>
+                {game.image
+                    ? <Image source={{uri: game.image}} style={styles.image}/>
+                    : <Text style={styles.image}>?</Text>
                 }
-                <Text style={styles.title}>{game.title}</Text>
-
+                <Text style={styles.title}>{game.title || 'Pick your preferred game'}</Text>
             </View>);
     }
 }
 
 
 const mapStateToProps = (state, ownProps) => {
-    if(state.games.isFetching || !state.games.list) {
+    if (state.games.isUpdating || !state.games.list) {
         return ownProps;
     }
     return {

@@ -19,7 +19,7 @@ export function receiveGames(games) {
 
 export function getAllGames() {
     return function (dispatch, getState) {
-        if (getState().isFetching) {
+        if (getState().isUpdating) {
             return Promise.resolve();
         }
         dispatch(requestGames());

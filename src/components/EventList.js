@@ -4,7 +4,7 @@ import EventCard from './EventCard';
 import ActionButton from 'react-native-action-button';
 import UserHeader from "./UserHeader";
 import connect from "react-redux/es/connect/connect";
-import { addPlayerToEvent, getAllEvents, removePlayerFromEvent} from "../actions/events";
+import {joinEvent, getAllEvents, leaveEvent, setGamePreference} from "../actions/events";
 
 
 class EventList extends Component {
@@ -15,30 +15,35 @@ class EventList extends Component {
     };
 
     handleAddEvent = () => {
-        this.props.navigation.navigate('createEvent');
+        this.props.navigate('createEvent');
     };
     handleEditEvent = (event) => {
-        this.props.navigation.navigate('editEvent', event);
+        this.props.navigate('editEvent', event);
     };
-    handlePlayerJoin = (event) => {
-        this.props.addPlayer(event, this.props.auth.username);
+    handleJoinEvent = (event) => {
+        this.props.joinEvent(event);
+        this.props.navigate('editPlayerPreferences', event);
     };
-    handlePlayerQuit = (event) => {
-        this.props.removePlayer(event, this.props.auth.username);
+    handleLeaveEvent = (event) => {
+        this.props.leaveEvent(event);
+    };
+    handleEditPreference = (event, currentPrefs, order) => {
+        this.props.navigate('selectGame', {eventId: event.id, currentPrefs, order});
     };
 
     render() {
         return [
             <ScrollView key="main" style={{padding: 15, paddingLeft: 10, paddingRight: 10}}>
                 <UserHeader/>
-                {this.props.isFetching && <Text>Loading...</Text>}
+                {this.props.isUpdating && <Text>Loading...</Text>}
                 <FlatList
                     key="eventList"
                     data={this.props.events}
                     renderItem={({item}) => <EventCard event={item}
-                                                       onEdit={() => this.handleEditEvent(item)}
-                                                       onPlayerJoin={() => this.handlePlayerJoin(item)}
-                                                       onPlayerQuit={() => this.handlePlayerQuit(item)}
+                                                       onEditEvent={() => this.handleEditEvent(item)}
+                                                       onEditPreference={(currentPrefs, order) => this.handleEditPreference(item, currentPrefs, order)}
+                                                       onJoinEvent={() => this.handleJoinEvent(item)}
+                                                       onLeaveEvent={() => this.handleLeaveEvent(item)}
                     />}
                     keyExtractor={item => item.id}
                 />
@@ -53,12 +58,11 @@ class EventList extends Component {
 }
 
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, {navigation}) => {
     return {
-        ...ownProps,
         events: state.events.list,
-        isFetching: state.isFetching,
-        auth: {username: state.auth.username}
+        isUpdating: state.isUpdating,
+        navigate: navigation.navigate,
     };
 };
 
@@ -67,12 +71,15 @@ const mapDispatchToProps = (dispatch) => {
         getAllEvents: () => {
             dispatch(getAllEvents());
         },
-        addPlayer: (event, playerName) => {
-            dispatch(addPlayerToEvent(event, playerName))
+        joinEvent: (event) => {
+            dispatch(joinEvent(event))
         },
-        removePlayer: (event, playerName) => {
-            dispatch(removePlayerFromEvent(event, playerName))
-        }
+        leaveEvent: (event) => {
+            dispatch(leaveEvent(event))
+        },
+        selectGame: (event, order, gameId) => {
+            dispatch(setGamePreference(event, order, gameId))
+        },
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(EventList);

@@ -5,4 +5,10 @@ export default ({
         flexDirection: 'column',
         marginBottom: 5
     },
+    gamePref: {
+        borderWidth: 2,
+        borderStyle: 'dashed',
+        borderColor: '#ccc',
+        backgroundColor: '#ffefc7'
+    }
 });

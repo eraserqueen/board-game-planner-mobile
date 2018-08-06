@@ -7,8 +7,8 @@ import {formatDate, formatTimeRange} from '../utils/dateUtils';
 import buttonStyles from '../styles/button';
 import Button from "./Button";
 import PlayerPanel from "./PlayerPanel";
-import PlayerPreferences from "./PlayerPreferences";
 import Schedule from "./Schedule";
+import PlayerPreferencesCard from "./PlayerPreferencesCard";
 
 const styles = StyleSheet.create({
     ...buttonStyles,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 
 class EventCard extends Component {
     render() {
-        const {event, currentUser, onEdit, onPlayerJoin, onPlayerQuit} = this.props;
+        const {event, currentUser, onEditEvent, onEditPreference, onJoinEvent, onLeaveEvent} = this.props;
         return (
             <View style={styles.eventCard}>
                 <View style={styles.eventCardHeader}>
@@ -44,7 +44,7 @@ class EventCard extends Component {
                         <Text>{formatTimeRange(event.dateTimeStart, event.dateTimeEnd)}</Text>
                     </View>
                     <Button
-                        onPress={onEdit}
+                        onPress={onEditEvent}
                         style={[styles.editButton, {flex: 1}]}
                         textStyle={{fontSize: 15}}
                         text="Edit Event"
@@ -57,14 +57,18 @@ class EventCard extends Component {
                     <Schedule eventId={event.id} schedule={event.schedule}/>
                 }
                 {!event.schedule && currentUser.preferences &&
-                    <PlayerPreferences eventId={event.id} preferences={currentUser.preferences}/>
+                    <PlayerPreferencesCard
+                        eventId={event.id}
+                        preferences={currentUser.preferences}
+                        onEditPreference={(order) => onEditPreference(currentUser.preferences, order)}
+                    />
                 }
                 {currentUser.isParticipant
-                    ? <Button onPress={onPlayerQuit}
+                    ? <Button onPress={onLeaveEvent}
                               style={[styles.deleteButton, {marginLeft: 0, marginRight: 0}]}
                               text="Leave"
                     />
-                    : <Button onPress={onPlayerJoin}
+                    : <Button onPress={onJoinEvent}
                               style={[styles.createButton, {marginLeft: 0, marginRight: 0}]}
                               text="Join"
                     />
@@ -109,6 +113,7 @@ function mapStateToProps(state, {event}) {
             }
         });
     }
+
     return {
         event: {...event, participants},
         currentUser
