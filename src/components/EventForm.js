@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableHighlight, TextInput, StyleSheet} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {formatDateTime} from '../utils/dateUtils';
-import {saveEvent, deleteEvent} from '../data/api';
 import buttonStyles from '../styles/button';
 import Button from "./Button";
+import connect from "react-redux/es/connect/connect";
+import {deleteEventFromList, saveEventToList} from "../actions/events";
 
 const styles = StyleSheet.create({
     ...buttonStyles,
@@ -27,20 +28,13 @@ const styles = StyleSheet.create({
 
 class EventForm extends Component {
     state = {
+        ...this.props.event,
         hasChanged: false,
         showDatePicker: false,
-        dateTimeStart: null,
-        dateTimeEnd: null,
         datePickerTarget: null,
         datePickerInitialValue: new Date(),
         datePickerMinimumDate: new Date(),
     };
-
-    componentDidMount() {
-        if (this.props.navigation.state.routeName == 'editEvent') {
-            this.setState(this.props.navigation.state.params);
-        }
-    }
 
     handleDatePress = (datePickerTarget) => {
         let datePickerInitialValue = new Date();
@@ -73,14 +67,12 @@ class EventForm extends Component {
         this.setState({showDatePicker: false, datePickerTarget: ''});
     };
     handleAddPress = () => {
-        saveEvent(this.state).then(res =>
-            this.props.navigation.goBack()
-        );
+        this.props.saveEvent(this.state);
+        this.props.navigation.goBack();
     };
     handleDeletePress = () => {
-        deleteEvent(this.state.id).then(res =>
-            this.props.navigation.goBack()
-        );
+        this.props.deleteEvent(this.state.id);
+        this.props.navigation.goBack();
     };
     handleCancelPress = () => this.props.navigation.goBack();
 
@@ -120,14 +112,32 @@ class EventForm extends Component {
                 <Button onPress={this.handleCancelPress}
                         style={styles.cancelButton}
                         text="Cancel"/>
+                {this.state.id === 'Update' &&
                 <Button onPress={this.handleDeletePress}
                         style={this.state.id ? styles.deleteButton : styles.cancelButton}
                         text={this.state.id ? 'Delete' : 'Cancel'}
-                />
+                />}
             </View>
 
         );
     }
 }
 
-export default EventForm;
+const mapStateToProps = (state, {navigation}) => {
+    return {
+        event: navigation.state.params,
+        navigation
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        saveEvent: (event) => {
+            dispatch(saveEventToList(event));
+        },
+        deleteEvent: (eventId) => {
+            dispatch(deleteEventFromList(eventId));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(EventForm);

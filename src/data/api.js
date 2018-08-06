@@ -15,30 +15,28 @@ export function getGames() {
         .catch(error => console.error(error));
 }
 
+const parseEvent = event => ({
+    ...event,
+    dateTimeStart: new Date(event.dateTimeStart),
+    dateTimeEnd: new Date(event.dateTimeEnd)
+});
 
-export function getEvents(){
+export function getEvents() {
     let url = `${baseUrl}/events`;
     return fetch(url)
         .then(response => response.json())
-        .then(json => json.map(event => {
-            return ({
-                ...event,
-                dateTimeStart: new Date(event.dateTimeStart),
-                dateTimeEnd: new Date(event.dateTimeEnd)
-            });
-        }))
-        .then(events => _.orderBy(events, 'dateTimeStart', 'asc'))
+        .then(json => json.map(parseEvent))
         .catch(error => console.error(error));
 }
 
-export function saveEvent({id, dateTimeStart, dateTimeEnd}) {
+export function saveEvent({id, dateTimeStart, dateTimeEnd, playerPreferences}) {
     let method;
     let url;
-    if(id) {
-        url = `${baseUrl}/events/${id}`,
+    if (id) {
+        url = `${baseUrl}/events/${id}`;
         method = 'PUT';
     } else {
-        url = baseUrl;
+        url = `${baseUrl}/events`;
         id = uuid();
         method = 'POST';
     }
@@ -51,15 +49,20 @@ export function saveEvent({id, dateTimeStart, dateTimeEnd}) {
             id,
             dateTimeStart: dateTimeStart.toISOString(),
             dateTimeEnd: dateTimeEnd.toISOString(),
+            playerPreferences
         })
     })
     .then(response => response.json())
+    .then(json => parseEvent(json))
     .catch(error => console.error(error));
 }
+
+
 export function deleteEvent(id) {
     return fetch(`${baseUrl}/${id}`, {
         method: 'DELETE'
     })
     .then(response => response.json())
+    .then(json => parseEvent(json))
     .catch(error => console.error(error));
 }
