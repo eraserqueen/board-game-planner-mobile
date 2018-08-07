@@ -51,7 +51,7 @@ class EventCard extends Component {
                     />
                 </View>
                 {event.participants &&
-                    <PlayerPanel participants={event.participants}/>
+                <PlayerPanel eventId={event.id} participants={event.participants}/>
                 }
                 {event.schedule &&
                     <Schedule eventId={event.id} schedule={event.schedule}/>

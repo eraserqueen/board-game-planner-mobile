@@ -10,11 +10,11 @@ export default function Schedule({eventId, schedule}) {
     return <View>
         <Text>Schedule</Text>
         <FlatList
-            listKey={`${eventId}-gamesList`}
+            listKey={`${eventId}-schedule`}
+            keyExtractor={item => `${eventId}-slot-${item.order}`}
             style={styles.gamesList}
             data={schedule}
             renderItem={({item}) => <GameIcon game={item} style={{borderWidth: 2, borderColor: 'green'}}/>}
-            keyExtractor={item => `${eventId}-slot-${item.order}`}
         />
     </View>;
 }
