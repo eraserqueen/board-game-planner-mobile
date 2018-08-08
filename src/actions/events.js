@@ -34,7 +34,6 @@ function eventDeleted(id) {
 }
 
 
-
 export function getAllEvents() {
     return function (dispatch, getState) {
         if (getState().isUpdating) {
@@ -73,7 +72,8 @@ export function joinEvent(event) {
         const playerName = getState().auth.username;
         dispatch(updateEventList());
 
-        const updatedPrefs = (event.playerPreferences || []).concat([{playerName, preferences: []}]);
+        const emptyPrefs = _.range(1,4).map(order => ({playerName, order}));
+        const updatedPrefs = (event.playerPreferences || []).concat(emptyPrefs);
         const updatedEvent = Object.assign({}, event, {playerPreferences: updatedPrefs});
         return db.saveEvent(updatedEvent)
             .then(savedEvent => dispatch(eventSaved(savedEvent)));
@@ -104,12 +104,12 @@ export function setGamePreference(eventId, order, gameId) {
         const event = _.find(getState().events.list, {id: eventId});
         dispatch(updateEventList());
 
-        const currentPrefs = _.find(event.playerPreferences, {playerName}).preferences || [];
-        const updatedPrefs = currentPrefs.filter(p => p.order !== order).concat([{order, gameId}]);
+        const currentPrefs = event.playerPreferences || [];
+        const updatedPrefs = currentPrefs
+            .filter(p => !(p.playerName === playerName && p.order === order))
+            .concat([{playerName, order, gameId}]);
         const updatedEvent = Object.assign({}, event, {
-            playerPreferences: event.playerPreferences
-                .filter(p => p.playerName !== playerName)
-                .concat([{playerName, preferences: updatedPrefs}])
+            playerPreferences: updatedPrefs
         });
         return db.saveEvent(updatedEvent)
             .then(savedEvent => dispatch(eventSaved(savedEvent)));

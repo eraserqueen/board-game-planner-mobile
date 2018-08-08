@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 
 import PropTypes from 'prop-types';
 import {formatDate, formatTimeRange} from '../utils/dateUtils';
@@ -51,17 +52,17 @@ class EventCard extends Component {
                     />
                 </View>
                 {event.participants &&
-                <PlayerPanel eventId={event.id} participants={event.participants}/>
+                <PlayerPanel eventId={event.id} participants={event.participants} />
                 }
                 {event.schedule &&
-                    <Schedule eventId={event.id} schedule={event.schedule}/>
+                <Schedule eventId={event.id} schedule={event.schedule}/>
                 }
-                {!event.schedule && currentUser.preferences &&
-                    <PlayerPreferencesCard
-                        eventId={event.id}
-                        preferences={currentUser.preferences}
-                        onEditPreference={(order) => onEditPreference(currentUser.preferences, order)}
-                    />
+                {!event.schedule && currentUser.isParticipant &&
+                <PlayerPreferencesCard
+                    eventId={event.id}
+                    preferences={currentUser.preferences}
+                    onEditPreference={(order) => onEditPreference(currentUser.preferences, order)}
+                />
                 }
                 {currentUser.isParticipant
                     ? <Button onPress={onLeaveEvent}
@@ -98,25 +99,16 @@ EventCard.propTypes = {
 };
 
 function mapStateToProps(state, {event}) {
-    const currentUser = {
-        name: state.auth.username,
-    };
-    const participants = [];
-    if (event.playerPreferences) {
-        event.playerPreferences.map(p => {
-            if (p.playerName === state.auth.username) {
-                currentUser.isParticipant = true;
-                currentUser.preferences = p.preferences;
-                participants.push('You');
-            } else {
-                participants.push(p.playerName);
-            }
-        });
-    }
-
+    const participants = _.uniq((event.playerPreferences || [])
+        .map(p => p.playerName === state.auth.username ? 'You' : p.playerName));
+    const currentUserPreferences = (event.playerPreferences || [])
+        .filter(p => p.playerName === state.auth.username);
     return {
         event: {...event, participants},
-        currentUser
+        currentUser: {
+            preferences: currentUserPreferences,
+            isParticipant: currentUserPreferences.length > 0
+        }
     };
 }
 
