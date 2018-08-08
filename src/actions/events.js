@@ -1,34 +1,21 @@
 import _ from 'lodash';
 import * as db from "../data/api";
 
-export const GET_EVENT_LIST = 'GET_EVENT_LIST';
-export const SAVE_EVENT = 'SAVE_EVENT';
-export const DELETE_EVENT = 'DELETE_EVENT';
-export const ADD_PLAYER = 'ADD_PLAYER';
-export const REMOVE_PLAYER = 'REMOVE_PLAYER';
-export const UPDATE_PLAYER_PREFERENCE = 'UPDATE_PLAYER_PREFERENCE';
-
-export const EVENT_LIST_RECEIVED = 'EVENT_LIST_RECEIVED';
+export const UPDATE_EVENT_LIST = 'UPDATE_EVENT_LIST';
+export const EVENT_LIST_UPDATED = 'EVENT_LIST_UPDATED';
 export const EVENT_SAVED = 'EVENT_SAVED';
 export const EVENT_DELETED = 'EVENT_DELETED';
 
-function getEventList() {
+function updateEventList() {
     return {
-        type: GET_EVENT_LIST
+        type: UPDATE_EVENT_LIST
     };
 }
 
-function eventListReceived(events) {
+function eventListUpdated(events) {
     return {
-        type: EVENT_LIST_RECEIVED,
+        type: EVENT_LIST_UPDATED,
         events
-    };
-}
-
-function saveEvent(event) {
-    return {
-        type: SAVE_EVENT,
-        event
     };
 }
 
@@ -39,13 +26,6 @@ function eventSaved(event) {
     };
 }
 
-function deleteEvent(id) {
-    return {
-        type: DELETE_EVENT,
-        id
-    };
-}
-
 function eventDeleted(id) {
     return {
         type: EVENT_DELETED,
@@ -53,31 +33,6 @@ function eventDeleted(id) {
     };
 }
 
-function addPlayer(event, playerName) {
-    return {
-        type: ADD_PLAYER,
-        event,
-        playerName
-    };
-}
-
-function removePlayer(event, playerName) {
-    return {
-        type: REMOVE_PLAYER,
-        event,
-        playerName
-    };
-}
-
-function updatePlayerPreference(event, playerName, order, gameId) {
-    return {
-        type: UPDATE_PLAYER_PREFERENCE,
-        event,
-        playerName,
-        order,
-        gameId
-    }
-}
 
 
 export function getAllEvents() {
@@ -85,8 +40,8 @@ export function getAllEvents() {
         if (getState().isUpdating) {
             return Promise.resolve();
         }
-        dispatch(getEventList());
-        return db.getEvents().then(events => dispatch(eventListReceived(events)));
+        dispatch(updateEventList());
+        return db.getEvents().then(events => dispatch(eventListUpdated(events)));
     };
 }
 
@@ -95,7 +50,7 @@ export function deleteEventFromList(id) {
         if (getState().isUpdating) {
             return Promise.resolve();
         }
-        dispatch(deleteEvent(id));
+        dispatch(updateEventList());
         return db.deleteEvent(id).then(() => dispatch(eventDeleted(id)));
     };
 }
@@ -105,7 +60,7 @@ export function saveEventToList(event) {
         if (getState().isUpdating) {
             return Promise.resolve();
         }
-        dispatch(saveEvent(event));
+        dispatch(updateEventList());
         return db.saveEvent(event).then((savedEvent) => dispatch(eventSaved(savedEvent)));
     };
 }
@@ -116,7 +71,8 @@ export function joinEvent(event) {
             return Promise.resolve();
         }
         const playerName = getState().auth.username;
-        dispatch(addPlayer(event, playerName));
+        dispatch(updateEventList());
+
         const updatedPrefs = (event.playerPreferences || []).concat([{playerName, preferences: []}]);
         const updatedEvent = Object.assign({}, event, {playerPreferences: updatedPrefs});
         return db.saveEvent(updatedEvent)
@@ -130,7 +86,8 @@ export function leaveEvent(event) {
             return Promise.resolve();
         }
         const playerName = getState().auth.username;
-        dispatch(removePlayer(event, playerName));
+        dispatch(updateEventList());
+
         const updatedPrefs = event.playerPreferences.filter(p => p.playerName !== playerName);
         const updatedEvent = Object.assign({}, event, {playerPreferences: updatedPrefs});
         return db.saveEvent(updatedEvent)
@@ -145,7 +102,7 @@ export function setGamePreference(eventId, order, gameId) {
         }
         const playerName = getState().auth.username;
         const event = _.find(getState().events.list, {id: eventId});
-        dispatch(updatePlayerPreference(event, playerName, order, gameId));
+        dispatch(updateEventList());
 
         const currentPrefs = _.find(event.playerPreferences, {playerName}).preferences || [];
         const updatedPrefs = currentPrefs.filter(p => p.order !== order).concat([{order, gameId}]);

@@ -1,28 +1,15 @@
-import {
-    ADD_PLAYER,
-    DELETE_EVENT,
-    EVENT_DELETED,
-    EVENT_SAVED,
-    EVENT_LIST_RECEIVED,
-    REMOVE_PLAYER,
-    GET_EVENT_LIST, SAVE_EVENT, UPDATE_PLAYER_PREFERENCE
-} from "../actions/events";
+import {EVENT_DELETED, EVENT_LIST_UPDATED, EVENT_SAVED, UPDATE_EVENT_LIST} from "../actions/events";
 import _ from "lodash";
 
 
 export default function reducer(state = [], action) {
     let updatedEvents;
     switch (action.type) {
-        case GET_EVENT_LIST:
-        case SAVE_EVENT:
-        case DELETE_EVENT:
-        case ADD_PLAYER:
-        case REMOVE_PLAYER:
-        case UPDATE_PLAYER_PREFERENCE:
+        case UPDATE_EVENT_LIST:
             return Object.assign({}, state, {
                 isUpdating: true
             });
-        case EVENT_LIST_RECEIVED:
+        case EVENT_LIST_UPDATED:
             return Object.assign({}, state, {
                 isUpdating: false,
                 list: _.orderBy(action.events, 'dateTimeStart', 'asc')
