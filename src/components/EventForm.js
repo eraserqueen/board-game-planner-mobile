@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -29,7 +30,6 @@ const styles = StyleSheet.create({
 class EventForm extends Component {
     state = {
         ...this.props.event,
-        hasChanged: false,
         showDatePicker: false,
         datePickerTarget: null,
         datePickerInitialValue: new Date(),
@@ -47,7 +47,6 @@ class EventForm extends Component {
             datePickerInitialValue = new Date(Math.max(datePickerInitialValue.valueOf(), this.state.dateTimeStart.valueOf()));
         }
         this.setState({
-            hasChanged: true,
             showDatePicker: true,
             datePickerTarget,
             datePickerInitialValue,
@@ -74,7 +73,6 @@ class EventForm extends Component {
         this.props.deleteEvent(this.state.id);
         this.props.navigation.goBack();
     };
-    handleCancelPress = () => this.props.navigation.goBack();
     handleGenerateSchedulePress = () => {
         this.props.generateSchedule(this.props.event);
         this.props.navigation.goBack();
@@ -117,20 +115,19 @@ class EventForm extends Component {
                 </View>
                 <Button onPress={this.handleAddPress} style={styles.createButton}
                         text={this.state.id ? 'Update' : 'Add'}/>
-                <Button onPress={this.handleCancelPress}
-                        style={styles.cancelButton}
-                        text="Cancel"/>
-                {this.state.id &&
-                <Button onPress={this.handleDeletePress}
-                        style={this.state.id ? styles.deleteButton : styles.cancelButton}
-                        text={this.state.id ? 'Delete' : 'Cancel'}
-                />}
-                {this.state.schedule
-                    ? <Button onPress={this.handleResetSchedulePress} style={styles.deleteButton}
-                              text="Reset schedule" />
-                    : <Button onPress={this.handleGenerateSchedulePress} style={styles.createButton}
-                              text="Generate schedule"/>
+
+                {this.props.canResetSchedule &&
+                <Button onPress={this.handleResetSchedulePress} style={styles.deleteButton}
+                        text="Reset schedule"/>}
+                {this.props.canGenerateSchedule &&
+                <Button onPress={this.handleGenerateSchedulePress} style={styles.createButton}
+                        text="Generate schedule"/>
                 }
+                {this.props.canDeleteEvent &&
+                <Button onPress={this.handleDeletePress}
+                        style={styles.deleteButton}
+                        text="Delete"
+                />}
             </View>
 
         );
@@ -138,8 +135,12 @@ class EventForm extends Component {
 }
 
 const mapStateToProps = (state, {navigation}) => {
+    let event = navigation.state.params;
     return {
-        event: navigation.state.params,
+        canDeleteEvent: !!event,
+        canResetSchedule: event && !_.isEmpty(event.schedule),
+        canGenerateSchedule: event && _.isEmpty(event.schedule) && (event.playerPreferences || []).filter(p => p.gameId).length > 0,
+        event,
         navigation
     };
 };

@@ -8,7 +8,7 @@ const parseEvent = event => ({
 });
 
 export function getAll() {
-    return fetch('/events')
+    return fetch(`/events?dateTimeEnd_gte=${(new Date()).toISOString()}`)
         .then(response => response.json())
         .then(json => json.map(parseEvent))
         .catch(error => console.error(error));
