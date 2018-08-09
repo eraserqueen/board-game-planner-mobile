@@ -1,29 +1,29 @@
-import {getGames} from "../data/api";
+import * as db from "../data/api";
 
-export const REQUEST_GAMES = 'REQUEST_GAMES';
-export const RECEIVE_GAMES = 'RECEIVE_GAMES';
+export const UPDATE_GAMES_LIST = 'UPDATE_GAMES_LIST';
+export const GAMES_LIST_UPDATED = 'GAMES_LIST_UPDATED';
 
 
-export function requestGames() {
+export function updateGamesList() {
     return {
-        type: REQUEST_GAMES
+        type: UPDATE_GAMES_LIST
     };
 }
 
-export function receiveGames(games) {
+export function gamesListUpdated(games) {
     return {
-        type: RECEIVE_GAMES,
+        type: GAMES_LIST_UPDATED,
         games
     };
 }
 
-export function getAllGames() {
+export function getGames() {
     return function (dispatch, getState) {
         if (getState().isUpdating) {
             return Promise.resolve();
         }
-        dispatch(requestGames());
-        return getGames().then(games => dispatch(receiveGames(games)));
+        dispatch(updateGamesList());
+        return db.getGames().then(games => dispatch(gamesListUpdated(games)));
     };
 }
 
