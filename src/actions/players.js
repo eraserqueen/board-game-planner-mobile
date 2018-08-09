@@ -1,4 +1,4 @@
-import * as db from "../data/api";
+import {players} from "../api";
 
 export const UPDATE_PLAYERS_LIST = 'UPDATE_PLAYERS_LIST';
 export const PLAYERS_LIST_UPDATED = 'PLAYERS_LIST_UPDATED';
@@ -23,7 +23,7 @@ export function getPlayers() {
             return Promise.resolve();
         }
         dispatch(updatePlayersList());
-        return db.getPlayers().then(players => dispatch(playersListUpdated(players)));
+        return players.getAll().then(players => dispatch(playersListUpdated(players)));
     };
 }
 

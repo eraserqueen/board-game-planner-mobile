@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as db from "../data/api";
+import {events} from "../api";
 
 export const UPDATE_EVENT_LIST = 'UPDATE_EVENT_LIST';
 export const EVENT_LIST_UPDATED = 'EVENT_LIST_UPDATED';
@@ -47,7 +47,7 @@ export function getAllEvents() {
             return Promise.resolve();
         }
         dispatch(updateEventList());
-        return db.getEvents().then(events => dispatch(eventListUpdated(events)));
+        return events.getAll().then(events => dispatch(eventListUpdated(events)));
     };
 }
 
@@ -57,7 +57,7 @@ export function deleteEvent(id) {
             return Promise.resolve();
         }
         dispatch(updateEventList());
-        return db.deleteEvent(id).then(() => dispatch(eventDeleted(id)));
+        return events.deleteById(id).then(() => dispatch(eventDeleted(id)));
     };
 }
 
@@ -69,9 +69,9 @@ export function saveEvent(event) {
         dispatch(updateEventList());
 
         if(event.id) {
-            return db.updateEvent(event).then((savedEvent) => dispatch(eventUpdated(savedEvent)));
+            return events.updateEvent(event).then((savedEvent) => dispatch(eventUpdated(savedEvent)));
         } else {
-            return db.addEvent(event).then((savedEvent) => dispatch(eventAdded(savedEvent)));
+            return events.addEvent(event).then((savedEvent) => dispatch(eventAdded(savedEvent)));
         }
     };
 }
@@ -87,7 +87,7 @@ export function joinEvent(event) {
         const emptyPrefs = _.range(1,4).map(order => ({playerName, order}));
         const updatedPrefs = (event.playerPreferences || []).concat(emptyPrefs);
         const updatedEvent = Object.assign({}, event, {playerPreferences: updatedPrefs});
-        return db.updateEvent(updatedEvent)
+        return events.updateEvent(updatedEvent)
             .then(savedEvent => dispatch(eventUpdated(savedEvent)));
     };
 }
@@ -102,7 +102,7 @@ export function leaveEvent(event) {
 
         const updatedPrefs = event.playerPreferences.filter(p => p.playerName !== playerName);
         const updatedEvent = Object.assign({}, event, {playerPreferences: updatedPrefs});
-        return db.updateEvent(updatedEvent)
+        return events.updateEvent(updatedEvent)
             .then(savedEvent => dispatch(eventUpdated(savedEvent)));
     };
 }
@@ -123,7 +123,7 @@ export function setGamePreference(eventId, order, gameId) {
         const updatedEvent = Object.assign({}, event, {
             playerPreferences: updatedPrefs
         });
-        return db.updateEvent(updatedEvent)
+        return events.updateEvent(updatedEvent)
             .then(savedEvent => dispatch(eventAdded(savedEvent)));
     }
 }
@@ -135,7 +135,7 @@ export function generateSchedule(event){
         }
         dispatch(updateEventList());
 
-        return db.updateEvent(event, {runScheduler: true})
+        return events.updateEvent(event, {runScheduler: true})
             .then(scheduledEvent => dispatch(eventAdded(scheduledEvent)));
     }
 }
@@ -147,7 +147,7 @@ export function resetSchedule(event){
         dispatch(updateEventList());
 
         const updatedEvent = Object.assign({}, event, {schedule: []});
-        return db.updateEvent(updatedEvent, {runScheduler: false})
+        return events.updateEvent(updatedEvent, {runScheduler: false})
             .then(scheduledEvent => dispatch(eventUpdated(scheduledEvent)));
     }
 }
