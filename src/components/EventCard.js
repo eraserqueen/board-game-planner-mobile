@@ -52,7 +52,7 @@ class EventCard extends Component {
                     />
                 </View>
                 {event.participants &&
-                <PlayerPanel eventId={event.id} participants={event.participants} />
+                <PlayerPanel eventId={event.id} participants={event.participants}/>
                 }
                 {event.schedule &&
                 <Schedule eventId={event.id} schedule={event.schedule}/>
@@ -99,12 +99,15 @@ EventCard.propTypes = {
 };
 
 function mapStateToProps(state, {event}) {
-    const participants = _.uniq((event.playerPreferences || [])
-        .map(p => p.playerName === state.auth.username ? 'You' : p.playerName));
+    const participants = _.uniqBy((event.playerPreferences || []).map(p => state.players.list[p.playerName]), 'name');
     const currentUserPreferences = (event.playerPreferences || [])
         .filter(p => p.playerName === state.auth.username);
     return {
-        event: {...event, participants},
+        event: {
+            ...event,
+            participants,
+            schedule: _.isEmpty(event.schedule) ? null : event.schedule
+        },
         currentUser: {
             preferences: currentUserPreferences,
             isParticipant: currentUserPreferences.length > 0

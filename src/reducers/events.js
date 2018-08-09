@@ -1,4 +1,4 @@
-import {EVENT_DELETED, EVENT_LIST_UPDATED, EVENT_SAVED, UPDATE_EVENT_LIST} from "../actions/events";
+import {EVENT_DELETED, EVENT_LIST_UPDATED, EVENT_ADDED, UPDATE_EVENT_LIST, EVENT_UPDATED} from "../actions/events";
 import _ from "lodash";
 
 
@@ -21,10 +21,16 @@ export default function reducer(state = [], action) {
                 isUpdating: false,
                 list: _.orderBy(updatedEvents, 'dateTimeStart', 'asc')
             });
-        case EVENT_SAVED:
+        case EVENT_UPDATED:
             updatedEvents = state.list
                 .filter(e => e.id !== action.event.id)
                 .concat([action.event]);
+            return Object.assign({}, state, {
+                isUpdating: false,
+                list: _.orderBy(updatedEvents, 'dateTimeStart', 'asc')
+            });
+        case EVENT_ADDED:
+            updatedEvents = state.list.concat([action.event]);
             return Object.assign({}, state, {
                 isUpdating: false,
                 list: _.orderBy(updatedEvents, 'dateTimeStart', 'asc')

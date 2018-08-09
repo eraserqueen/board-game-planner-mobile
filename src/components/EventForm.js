@@ -5,7 +5,7 @@ import {formatDateTime} from '../utils/dateUtils';
 import buttonStyles from '../styles/button';
 import Button from "./Button";
 import connect from "react-redux/es/connect/connect";
-import {deleteEventFromList, saveEventToList} from "../actions/events";
+import {deleteEvent, generateSchedule, resetSchedule, saveEvent} from "../actions/events";
 
 const styles = StyleSheet.create({
     ...buttonStyles,
@@ -75,6 +75,14 @@ class EventForm extends Component {
         this.props.navigation.goBack();
     };
     handleCancelPress = () => this.props.navigation.goBack();
+    handleGenerateSchedulePress = () => {
+        this.props.generateSchedule(this.props.event);
+        this.props.navigation.goBack();
+    };
+    handleResetSchedulePress = () => {
+        this.props.resetSchedule(this.props.event);
+        this.props.navigation.goBack();
+    };
 
     render() {
         return (
@@ -112,11 +120,17 @@ class EventForm extends Component {
                 <Button onPress={this.handleCancelPress}
                         style={styles.cancelButton}
                         text="Cancel"/>
-                {this.state.id === 'Update' &&
+                {this.state.id &&
                 <Button onPress={this.handleDeletePress}
                         style={this.state.id ? styles.deleteButton : styles.cancelButton}
                         text={this.state.id ? 'Delete' : 'Cancel'}
                 />}
+                {this.state.schedule
+                    ? <Button onPress={this.handleResetSchedulePress} style={styles.deleteButton}
+                              text="Reset schedule" />
+                    : <Button onPress={this.handleGenerateSchedulePress} style={styles.createButton}
+                              text="Generate schedule"/>
+                }
             </View>
 
         );
@@ -133,10 +147,16 @@ const mapStateToProps = (state, {navigation}) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         saveEvent: (event) => {
-            dispatch(saveEventToList(event));
+            dispatch(saveEvent(event));
         },
         deleteEvent: (eventId) => {
-            dispatch(deleteEventFromList(eventId));
+            dispatch(deleteEvent(eventId));
+        },
+        generateSchedule: (event) => {
+            dispatch(generateSchedule(event));
+        },
+        resetSchedule: (event) => {
+            dispatch(resetSchedule(event));
         }
     }
 };

@@ -1,6 +1,5 @@
 import Expo from 'expo';
 import uuid from 'uuid';
-import _ from 'lodash';
 import fetch from 'cross-fetch';
 
 const {manifest} = Expo.Constants;
@@ -29,40 +28,47 @@ export function getEvents() {
         .catch(error => console.error(error));
 }
 
-export function saveEvent({id, dateTimeStart, dateTimeEnd, playerPreferences}) {
-    let method;
-    let url;
-    if (id) {
-        url = `${baseUrl}/events/${id}`;
-        method = 'PUT';
-    } else {
-        url = `${baseUrl}/events`;
-        id = uuid();
-        method = 'POST';
-    }
+export function addEvent({dateTimeStart, dateTimeEnd}) {
+    const url = `${baseUrl}/events`;
     return fetch(url, {
-        method,
+        method: "POST",
         headers: new Headers({
             'Content-Type': 'application/json'
         }),
         body: JSON.stringify({
-            id,
+            id: uuid(),
             dateTimeStart: dateTimeStart.toISOString(),
             dateTimeEnd: dateTimeEnd.toISOString(),
-            playerPreferences
         })
     })
-    .then(response => response.json())
-    .then(json => parseEvent(json))
-    .catch(error => console.error(error));
+        .then(response => response.json())
+        .then(json => parseEvent(json))
+        .catch(error => console.error(error));
 }
 
+export function updateEvent(event, options = {runScheduler: false}) {
+    const url = `${baseUrl}/events/${event.id}?runScheduler=${options.runScheduler?'true':'false'}`;
+    console.log(event);
+    return fetch(url, {
+        method: "PUT",
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(Object.assign({}, event, {
+            dateTimeStart: event.dateTimeStart.toISOString(),
+            dateTimeEnd: event.dateTimeEnd.toISOString(),
+        }))
+    })
+        .then(response => response.json())
+        .then(json => parseEvent(json))
+        .catch(error => console.error(error));
+}
 
 export function deleteEvent(id) {
     return fetch(`${baseUrl}/${id}`, {
         method: 'DELETE'
     })
-    .then(response => response.json())
-    .then(json => parseEvent(json))
-    .catch(error => console.error(error));
+        .then(response => response.json())
+        .then(json => parseEvent(json))
+        .catch(error => console.error(error));
 }
