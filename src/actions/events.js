@@ -124,7 +124,7 @@ export function setGamePreference(eventId, order, gameId) {
             playerPreferences: updatedPrefs
         });
         return events.updateEvent(updatedEvent)
-            .then(savedEvent => dispatch(eventAdded(savedEvent)));
+            .then(savedEvent => dispatch(eventUpdated(savedEvent)));
     }
 }
 
@@ -136,7 +136,7 @@ export function generateSchedule(event){
         dispatch(updateEventList());
 
         return events.updateEvent(event, {runScheduler: true})
-            .then(scheduledEvent => dispatch(eventAdded(scheduledEvent)));
+            .then(scheduledEvent => dispatch(eventUpdated(scheduledEvent)));
     }
 }
 export function resetSchedule(event){
