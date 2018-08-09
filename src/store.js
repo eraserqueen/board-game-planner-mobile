@@ -6,6 +6,7 @@ import loggerMiddleware from 'redux-logger';
 
 import rootReducer from './reducers'
 import {getAllGames} from "./actions/games";
+import {getPlayers} from "./actions/players";
 
 const persistConfig = {
     key: 'root',
@@ -19,6 +20,7 @@ const store = createStore(persistedReducer, applyMiddleware(
     loggerMiddleware
 ));
 store.dispatch(getAllGames());
+store.dispatch(getPlayers());
 
 const persistor = persistStore(store);
 

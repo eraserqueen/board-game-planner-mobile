@@ -7,6 +7,13 @@ const api = manifest.packagerOpts.dev ? manifest.debuggerHost.split(':').shift()
 
 const baseUrl = `http://${api}`;
 
+export function getPlayers() {
+    const url = `${baseUrl}/players`;
+    return fetch(url)
+        .then(response => response.json())
+        .catch(error => console.error(error));
+}
+
 export function getGames() {
     const url = `${baseUrl}/games`;
     return fetch(url)
