@@ -1,5 +1,11 @@
-import * as players from './players';
-import * as games from './games';
-import * as events from './events';
+import playersClient from './players';
+import gamesClient from './games';
+import eventsClient from './events';
+import authClient from './auth';
 
-export { players, games, events };
+export {
+    gamesClient,
+    playersClient,
+    eventsClient,
+    authClient
+}

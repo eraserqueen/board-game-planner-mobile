@@ -5,8 +5,6 @@ import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
 
 import rootReducer from './reducers'
-import {getGames} from "./actions/games";
-import {getPlayers} from "./actions/players";
 
 const persistConfig = {
     key: 'root',
@@ -19,8 +17,6 @@ const store = createStore(persistedReducer, applyMiddleware(
     thunkMiddleware,
     loggerMiddleware
 ));
-store.dispatch(getGames());
-store.dispatch(getPlayers());
 
 const persistor = persistStore(store);
 

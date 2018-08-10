@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
-import {FlatList, ScrollView} from 'react-native';
+import {FlatList, ScrollView, Text} from 'react-native';
 import EventCard from './EventCard';
 import ActionButton from 'react-native-action-button';
 import UserHeader from "./UserHeader";
 import connect from "react-redux/es/connect/connect";
-import {joinEvent, getAllEvents, leaveEvent, setGamePreference} from "../actions/events";
+import {joinEvent, getEvents, leaveEvent, setGamePreference} from "../actions/events";
+import {getPlayers} from "../actions/players";
+import {getGames} from "../actions/games";
 
 
 class EventList extends Component {
-    componentDidMount() {
-        this.props.navigation.addListener('didFocus', () => {
-            this.props.getAllEvents();
-        });
-    };
-
+    componentWillMount(){
+        this.props.initStore();
+    }
     handleAddEvent = () => {
         this.props.navigate('createEvent');
     };
@@ -32,10 +31,12 @@ class EventList extends Component {
     };
 
     render() {
+        if(this.props.isUpdating) {
+            return <Text style={{margin: 100, alignSelf: 'center'}}>Loading events...</Text>
+        }
         return [
             <ScrollView key="main" style={{padding: 15, paddingLeft: 10, paddingRight: 10}}>
                 <UserHeader/>
-                {this.props.isUpdating && <Text>Loading...</Text>}
                 <FlatList
                     key="eventList"
                     data={this.props.events}
@@ -61,15 +62,17 @@ class EventList extends Component {
 const mapStateToProps = (state, {navigation}) => {
     return {
         events: state.events.list,
-        isUpdating: state.isUpdating,
+        isUpdating: state.events.isUpdating || state.games.isUpdating || state.players.isUpdating,
         navigate: navigation.navigate,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getAllEvents: () => {
-            dispatch(getAllEvents());
+        initStore: () => {
+            dispatch(getPlayers());
+            dispatch(getGames());
+            dispatch(getEvents());
         },
         joinEvent: (event) => {
             dispatch(joinEvent(event))

@@ -4,27 +4,14 @@ import {StyleSheet, TextInput, View} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {formatDateTime} from '../utils/dateUtils';
 import buttonStyles from '../styles/button';
+import formStyles from '../styles/form';
 import Button from "./Button";
 import connect from "react-redux/es/connect/connect";
 import {deleteEvent, generateSchedule, resetSchedule, saveEvent} from "../actions/events";
 
 const styles = StyleSheet.create({
     ...buttonStyles,
-    fieldContainer: {
-        marginTop: 20,
-        marginBottom: 20,
-        backgroundColor: '#ffffff'
-    },
-    text: {
-        height: 40,
-        margin: 0,
-        marginRight: 7,
-        marginLeft: 10
-    },
-    borderTop: {
-        borderColor: '#eefeff',
-        borderTopWidth: 0.5
-    }
+    ...formStyles
 });
 
 class EventForm extends Component {
@@ -66,7 +53,10 @@ class EventForm extends Component {
         this.setState({showDatePicker: false, datePickerTarget: ''});
     };
     handleAddPress = () => {
-        this.props.saveEvent(this.state);
+        this.props.saveEvent({
+            dateTimeStart: this.state.dateTimeStart,
+            dateTimeEnd: this.state.dateTimeEnd
+        });
         this.props.navigation.goBack();
     };
     handleDeletePress = () => {
@@ -88,7 +78,7 @@ class EventForm extends Component {
                 <View style={styles.fieldContainer}>
                     <TextInput
                         key="dateTimeStart"
-                        style={[styles.text, styles.borderTop]}
+                        style={styles.textInput}
                         placeholder="Event start"
                         spellCheck={false}
                         value={formatDateTime(this.state.dateTimeStart)}
@@ -97,7 +87,7 @@ class EventForm extends Component {
                     />
                     <TextInput
                         key="dateTimeEnd"
-                        style={[styles.text, styles.borderTop]}
+                        style={styles.textInput}
                         placeholder="Event end"
                         spellCheck={false}
                         value={formatDateTime(this.state.dateTimeEnd)}

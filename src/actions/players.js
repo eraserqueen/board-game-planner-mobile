@@ -1,4 +1,4 @@
-import {players} from "../api";
+import {playersClient} from '../api';
 
 export const UPDATE_PLAYERS_LIST = 'UPDATE_PLAYERS_LIST';
 export const PLAYERS_LIST_UPDATED = 'PLAYERS_LIST_UPDATED';
@@ -23,7 +23,8 @@ export function getPlayers() {
             return Promise.resolve();
         }
         dispatch(updatePlayersList());
-        return players.getAll().then(players => dispatch(playersListUpdated(players)));
+        const token = getState().auth.token;
+        return playersClient({token}).getAll(getState().auth.token).then(players => dispatch(playersListUpdated(players)));
     };
 }
 

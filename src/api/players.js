@@ -1,7 +1,15 @@
-import fetch from "../utils/apiRequestBuilder";
+import {authClient} from "../utils/ApiSessionManager";
 
-export function getAll() {
-    return fetch('/players')
-        .then(response => response.json())
-        .catch(error => console.error(error));
+export default function init(options) {
+    const client = authClient.init(options.token);
+
+    function getAll() {
+        return client.fetch('/players')
+            .then(response => response.json())
+            .catch(error => console.error(error));
+    }
+
+    return ({
+        getAll
+    });
 }
