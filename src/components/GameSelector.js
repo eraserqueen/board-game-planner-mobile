@@ -23,7 +23,7 @@ class GameSelector extends Component {
             style={styles.gamesList}
             data={this.props.games}
             renderItem={({item}) => (<TouchableHighlight onPress={() => this.handleGameSelected(item)}>
-                <GameIcon game={item} style={styles.gamePref}/>
+                <GameIcon game={item} style={styles.gameSelectorItem}/>
             </TouchableHighlight>)
             }
         />);
@@ -33,7 +33,10 @@ class GameSelector extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-    const {eventId, currentPrefs, order} = ownProps.navigation.state.params;
+    const {eventId, order} = ownProps.navigation.state.params;
+    const currentPrefs = state.events.list
+        .filter(e => e.id === eventId)[0].playerPreferences
+        .filter(p => p.playerName === state.auth.username);
     const allGames = _.values(state.games.list);
     const selectedGames = currentPrefs.map(p => p.gameId || undefined);
     const availableGames = allGames.filter(g => !selectedGames.includes(g.id));

@@ -1,49 +1,22 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import connect from "react-redux/es/connect/connect";
-import {getGameDetails} from "../actions/games";
-
-const styles = StyleSheet.create({
-    gameCard: {
-        padding: 10,
-        marginTop: 5,
-        marginBottom: 5,
-        backgroundColor: '#c8f5d3',
-        flex: 1,
-        flexDirection: 'row',
-        borderRadius: 5,
-    },
-    orderNum: {
-        fontSize: 40,
-        color: '#fff',
-        fontWeight: 'bold'
-    },
-    image: {
-        height: 50,
-        width: 50,
-        marginLeft: 15,
-        marginRight: 15,
-        borderRadius: 3
-    },
-    title: {
-        fontSize: 15
-    }
-
-});
-
+import styles from '../styles/games';
 
 class GameIcon extends Component {
     render() {
         const {game, style} = this.props;
         return (
-            <View style={[styles.gameCard, style]}>
-                <Text style={styles.orderNum}>{game.order}</Text>
-                {game.image
-                    ? <Image source={{uri: game.image}} style={styles.image}/>
-                    : <Text style={styles.image}>?</Text>
-                }
-                <Text style={styles.title}>{game.title || 'Pick your preferred game'}</Text>
-            </View>);
+            <View style={[styles.gameWrapper, style]}>
+                <View>
+                    {game.image
+                        ? <Image source={{uri: game.image}} style={styles.gameIcon}/>
+                        : <Text style={styles.gameIcon}>?</Text>
+                    }
+                </View>
+                <Text style={styles.gameTitle}>{game.title || 'Pick your preferred game'}</Text>
+            </View>
+        );
     }
 }
 

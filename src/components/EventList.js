@@ -4,7 +4,7 @@ import EventCard from './EventCard';
 import ActionButton from 'react-native-action-button';
 import UserHeader from "./UserHeader";
 import connect from "react-redux/es/connect/connect";
-import {joinEvent, getEvents, leaveEvent, setGamePreference} from "../actions/events";
+import {joinEvent, getEvents, leaveEvent, setGamePreference, switchPreferenceOrder} from "../actions/events";
 import {getPlayers} from "../actions/players";
 import {getGames} from "../actions/games";
 
@@ -29,7 +29,9 @@ class EventList extends Component {
     handleEditPreference = (event, currentPrefs, order) => {
         this.props.navigate('selectGame', {eventId: event.id, currentPrefs, order});
     };
-
+    handleSwitchPreferenceOrder = (event, from, to) => {
+      this.props.switchPreferenceOrder(event, from, to);
+    };
     render() {
         if(this.props.isUpdating) {
             return <Text style={{margin: 100, alignSelf: 'center'}}>Loading events...</Text>
@@ -42,9 +44,10 @@ class EventList extends Component {
                     data={this.props.events}
                     renderItem={({item}) => <EventCard event={item}
                                                        onEditEvent={() => this.handleEditEvent(item)}
-                                                       onEditPreference={(currentPrefs, order) => this.handleEditPreference(item, currentPrefs, order)}
                                                        onJoinEvent={() => this.handleJoinEvent(item)}
                                                        onLeaveEvent={() => this.handleLeaveEvent(item)}
+                                                       onEditPreference={(currentPrefs, order) => this.handleEditPreference(item, currentPrefs, order)}
+                                                       onSwitchPreferenceOrder={(from, to) => this.handleSwitchPreferenceOrder(item, from, to)}
                     />}
                     keyExtractor={item => item.id}
                 />
@@ -80,8 +83,8 @@ const mapDispatchToProps = (dispatch) => {
         leaveEvent: (event) => {
             dispatch(leaveEvent(event))
         },
-        selectGame: (event, order, gameId) => {
-            dispatch(setGamePreference(event, order, gameId))
+        switchPreferenceOrder: (event, from, to) => {
+            dispatch(switchPreferenceOrder(event, from, to));
         },
     }
 };

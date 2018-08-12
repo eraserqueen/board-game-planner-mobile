@@ -111,6 +111,25 @@ export function leaveEvent(event) {
     };
 }
 
+export function switchPreferenceOrder(event, from, to){
+
+    return function (dispatch, getState) {
+        if (getState().isUpdating) {
+            return Promise.resolve();
+        }
+        dispatch(updateEventList());
+
+        const playerPreferences = (event.playerPreferences || []);
+        _.remove(playerPreferences, from);
+        _.remove(playerPreferences, to);
+        playerPreferences.push({playerName: from.playerName, order: from.order, gameId: to.gameId});
+        playerPreferences.push({playerName: from.playerName, order: to.order, gameId: from.gameId});
+        return getEventsApiClient(getState)
+            .updateEvent({ ...event, playerPreferences})
+            .then(savedEvent => dispatch(eventUpdated(savedEvent)));
+    }
+}
+
 export function setGamePreference(eventId, order, gameId) {
     return function (dispatch, getState) {
         if (getState().isUpdating) {

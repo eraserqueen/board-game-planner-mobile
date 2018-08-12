@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 
 class EventCard extends Component {
     render() {
-        const {event, currentUser, onEditEvent, onEditPreference, onJoinEvent, onLeaveEvent} = this.props;
+        const {event, currentUser, onEditEvent, onEditPreference, onSwitchPreferenceOrder, onJoinEvent, onLeaveEvent} = this.props;
         return (
             <View style={styles.eventCard}>
                 <View style={styles.eventCardHeader}>
@@ -62,6 +62,7 @@ class EventCard extends Component {
                     eventId={event.id}
                     preferences={currentUser.preferences}
                     onEditPreference={(order) => onEditPreference(currentUser.preferences, order)}
+                    onSwitchPreferenceOrder={onSwitchPreferenceOrder}
                 />
                 }
                 {currentUser.isParticipant
@@ -99,7 +100,13 @@ EventCard.propTypes = {
 };
 
 function mapStateToProps(state, {event}) {
-    const participants = _.uniqBy((event.playerPreferences || []).map(p => state.players.list[p.playerName]), 'name');
+    let participants;
+    if(!event.playerPreferences) {
+        participants = [];
+    }
+    else {
+        participants = _.uniqBy(event.playerPreferences.map(p => state.players.list[p.playerName]), 'name');
+    }
     const currentUserPreferences = (event.playerPreferences || [])
         .filter(p => p.playerName === state.auth.username);
     return {
