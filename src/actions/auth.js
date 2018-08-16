@@ -19,9 +19,10 @@ function sessionCreated({user, token}) {
 }
 
 
-function authenticationError() {
+function authenticationError(error) {
     return {
-        type: AUTHENTICATION_ERROR
+        type: AUTHENTICATION_ERROR,
+        error
     }
 }
 
@@ -32,8 +33,8 @@ export function registerNewUser(username, password) {
         }
         dispatch(createSession());
         return authClient().register(username, password).then(session => {
-            if(!session.token) {
-                return dispatch(authenticationError());
+            if(!(session && session.token)) {
+                return dispatch(authenticationError(session.error || 'unknown error'));
             }
             return dispatch(sessionCreated(session));
         });
@@ -47,8 +48,8 @@ export function checkCredentials(username, password) {
         }
         dispatch(createSession());
         return authClient().createSession(username, password).then(session => {
-            if(!session.token) {
-                return dispatch(authenticationError());
+            if(!(session && session.token)) {
+                return dispatch(authenticationError(session.error || 'unknown error'));
             }
             return dispatch(sessionCreated(session));
         });

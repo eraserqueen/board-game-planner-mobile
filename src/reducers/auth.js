@@ -23,7 +23,7 @@ export default function reducer(state = defaultState, action) {
                 error: null
             });
         case AUTHENTICATION_ERROR:
-            return Object.assign({}, state, {inProgress: false, error: 'Authentication error'});
+            return Object.assign({}, state, {inProgress: false, error: action.error});
         case LOGOUT_USER:
             return Object.assign({}, state, defaultState);
         default:

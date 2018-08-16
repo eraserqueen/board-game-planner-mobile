@@ -4,12 +4,12 @@ const host = 'http://localhost:3000';
 
 
 const unAuthClient = {
-    fetch: (path, options) => fetch(`http://${host}${path}`, Object.assign({
-        method: 'GET',
-        headers: new Headers({
-            'Content-Type': 'application/json'
-        })
-    }, options))
+    fetch: (path, options) => fetch(`${host}${path}`, Object.assign({
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        }, options))
 };
 const authClient = {
     init: (token) => {
@@ -18,7 +18,7 @@ const authClient = {
                 if(!token) {
                     return error('no token provided');
                 }
-                return fetch(`http://${host}${path}`, Object.assign({
+                return fetch(`${host}${path}`, Object.assign({
                     method: 'GET',
                     headers: new Headers({
                         'Content-Type': 'application/json',
