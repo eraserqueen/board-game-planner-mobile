@@ -25,6 +25,21 @@ function authenticationError() {
     }
 }
 
+export function registerNewUser(username, password) {
+    return function (dispatch, getState) {
+        if (getState().isUpdating) {
+            return Promise.resolve();
+        }
+        dispatch(createSession());
+        return authClient().register(username, password).then(session => {
+            if(!session.token) {
+                return dispatch(authenticationError());
+            }
+            return dispatch(sessionCreated(session));
+        });
+    };
+}
+
 export function checkCredentials(username, password) {
     return function (dispatch, getState) {
         if (getState().isUpdating) {
