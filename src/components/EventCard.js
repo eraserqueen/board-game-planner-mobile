@@ -105,7 +105,7 @@ function mapStateToProps(state, {event}) {
         participants = [];
     }
     else {
-        participants = _.uniqBy(event.playerPreferences.map(p => state.players.list[p.playerName]), 'name');
+        participants = _.uniqBy(event.playerPreferences.map(p => state.players.list[p.playerName]), 'name').filter(n => n !== undefined);
     }
     const currentUserPreferences = (event.playerPreferences || [])
         .filter(p => p.playerName === state.auth.username);

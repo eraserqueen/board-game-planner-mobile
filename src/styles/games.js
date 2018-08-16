@@ -4,11 +4,24 @@ export default ({
         flexDirection: 'column',
         marginBottom: 5
     },
-    gamePref: {
+    gameWrapper: {
+        flex: 1,
+        flexDirection: 'row',
+        padding: 5,
+        borderRadius: 5,
+        marginTop: 2,
+        marginBottom: 2,
         borderWidth: 2,
+    },
+    gamePref: {
         borderStyle: 'dashed',
         borderColor: '#ccc',
         backgroundColor: '#ffefc7'
+    },
+    scheduledGame: {
+        borderWidth: 2,
+        borderColor: 'green',
+        backgroundColor: '#c8f5d3'
     },
     gameSelectorItem: {
         backgroundColor: '#fff',
@@ -17,19 +30,18 @@ export default ({
         marginBottom: 0,
         padding: 5
     },
-    gameCard: {
-        padding: 0,
-        marginTop: 5,
-        marginBottom: 5,
-        backgroundColor: '#c8f5d3',
-        flex: 1,
-        flexDirection: 'row',
-        borderRadius: 5,
+    gameIcon: {
+        height: 50,
+        width: 50,
+        margin:0,
+        borderRadius: 3
     },
     orderNum: {
         padding: 0,
-        margin: 0,
-        marginLeft: 10,
+        marginTop: 0,
+        marginBottom: 0,
+        marginLeft: 5,
+        marginRight: 5,
         fontSize: 40,
         color: '#fff',
         fontWeight: 'bold',
@@ -38,7 +50,10 @@ export default ({
     },
     orderChangeButton: {
         padding: 0,
-        margin: 0,
+        marginTop:0,
+        marginBottom:0,
+        marginLeft:0,
+        marginRight:0,
         height: 20,
         width: 20,
         backgroundColor: 'grey'
@@ -50,20 +65,9 @@ export default ({
         fontSize: 15,
         lineHeight: 15
     },
-    gameWrapper: {
-        flex: 1,
-        flexDirection: 'row',
-        padding: 5
-    },
-    gameIcon: {
-        height: 50,
-        width: 50,
-        marginLeft: 15,
-        marginRight: 15,
-        borderRadius: 3
-    },
     gameTitle: {
+        marginLeft: 10,
         fontSize: 15,
         flex: 2
-    }
+    },
 });

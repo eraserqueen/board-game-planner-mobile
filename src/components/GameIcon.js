@@ -7,7 +7,7 @@ class GameIcon extends Component {
     render() {
         const {game, style} = this.props;
         return (
-            <View style={[styles.gameWrapper, style]}>
+            <View style={[style, {flexDirection:'row'}]}>
                 <View>
                     {game.image
                         ? <Image source={{uri: game.image}} style={styles.gameIcon}/>

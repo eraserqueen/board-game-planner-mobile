@@ -14,7 +14,7 @@ export default function PlayerPreferencesCard({eventId, preferences, onEditPrefe
         keyExtractor={item => `${eventId}-pref-${item.order}`}
         style={styles.gamesList}
         data={orderedPrefs}
-        renderItem={({item}) => <GameCard game={item} style={styles.gamePref}
+        renderItem={({item}) => <GameCard game={item} style={[styles.gameWrapper, styles.gamePref]}
                                           onEditPreference={onEditPreference}
                                           onSwitchPreferenceOrder={(orderFrom, orderTo) => onSwitchPreferenceOrder(orderedPrefs[orderFrom-1], orderedPrefs[orderTo-1])} />
         }
