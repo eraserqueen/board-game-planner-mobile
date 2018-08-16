@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render with custom button style 1`] = `
+<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "borderRadius": 5,
+        "height": 50,
+        "justifyContent": "center",
+        "marginBottom": 5,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 5,
+      },
+      Object {
+        "backgroundColor": "orange",
+      },
+    ]
+  }
+>
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Array [
+        Object {
+          "color": "#fff",
+          "fontSize": 18,
+        },
+        undefined,
+      ]
+    }
+  />
+</View>
+`;
+
+exports[`should render with custom text style 1`] = `
+<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "borderRadius": 5,
+        "height": 50,
+        "justifyContent": "center",
+        "marginBottom": 5,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 5,
+      },
+      undefined,
+    ]
+  }
+>
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Array [
+        Object {
+          "color": "#fff",
+          "fontSize": 18,
+        },
+        Object {
+          "backgroundColor": "orange",
+        },
+      ]
+    }
+  >
+    My button
+  </Text>
+</View>
+`;
+
+exports[`should render with default style 1`] = `
+<View
+  accessible={true}
+  isTVSelectable={true}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "borderRadius": 5,
+        "height": 50,
+        "justifyContent": "center",
+        "marginBottom": 5,
+        "marginLeft": 10,
+        "marginRight": 10,
+        "marginTop": 5,
+      },
+      undefined,
+    ]
+  }
+>
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Array [
+        Object {
+          "color": "#fff",
+          "fontSize": 18,
+        },
+        undefined,
+      ]
+    }
+  />
+</View>
+`;

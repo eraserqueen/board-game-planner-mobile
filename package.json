@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.4.2",
     "babel-preset-react-native-stage-0": "^1.0.1",
+    "chai": "^4.1.2",
     "jest": "^23.5.0",
-    "jest-react-native": "^18.0.0",
-    "react-test-renderer": "16.3.1"
+    "react-test-renderer": "16.3.1",
+    "regenerator-runtime": "^0.12.1"
   },
   "scripts": {
     "start": "react-native start",
@@ -15,7 +18,10 @@
     "test": "jest"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react|react-redux|react-native.*|react-navigation|lodash-es)/)"
+    ]
   },
   "dependencies": {
     "cross-fetch": "^2.2.2",
