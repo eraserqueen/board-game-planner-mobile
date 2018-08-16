@@ -6,6 +6,11 @@
 # dependencies
 /node_modules
 
+# native
+ios/*.xcodeproj
+ios/build
+android/build
+
 # misc
 .env.local
 .env.development.local
