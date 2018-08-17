@@ -1,23 +1,25 @@
-import {applyMiddleware, createStore} from 'redux'
-import { persistStore, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web and AsyncStorage for react-native
+import {applyMiddleware, combineReducers, createStore} from 'redux'
+import {persistReducer, persistStore} from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
+import {authReducer, eventsReducer, gamesReducer, playersReducer} from "./reducers";
 
-import rootReducer from './reducers'
-
-const persistConfig = {
-    key: 'root',
-    storage,
-    whitelist: ['auth']
-};
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-const store = createStore(persistedReducer, applyMiddleware(
+const combinedReducers = combineReducers({
+    auth: persistReducer({
+        key: 'auth',
+        storage,
+        whitelist: ['isLoggedIn', 'username', 'token']
+    }, authReducer),
+    events: eventsReducer,
+    games: gamesReducer,
+    players: playersReducer
+});
+const store = createStore(combinedReducers, applyMiddleware(
     thunkMiddleware,
     loggerMiddleware
 ));
 
 const persistor = persistStore(store);
 
-export { store, persistor };
+export {store, persistor};

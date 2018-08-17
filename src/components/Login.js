@@ -10,7 +10,8 @@ class Login extends Component {
     state = {
         screen: 'login',
         username: '',
-        password: ''
+        password: '',
+        error: null
     };
 
     handleLoginPress(e) {
@@ -22,7 +23,7 @@ class Login extends Component {
         e.preventDefault();
     }
     handleToggleScreen() {
-        this.setState({screen: this.state.screen === 'login' ? 'register' : 'login'});
+        this.setState({screen: this.state.screen === 'login' ? 'register' : 'login', error: null});
     }
 
     render() {
@@ -69,11 +70,9 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
-        isLoggedIn: state.auth.isLoggedIn,
-        error: state.auth.error,
-        navigation: ownProps.navigation,
+        error: state.auth.error
     };
 };
 

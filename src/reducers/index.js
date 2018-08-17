@@ -1,14 +1,12 @@
-import {combineReducers} from 'redux';
-import auth from './auth';
-import events from "./events";
-import games from "./games";
-import players from "./players";
+import authReducer from './auth';
+import eventsReducer from "./events";
+import gamesReducer from "./games";
+import playersReducer from "./players";
 
-const rootReducer = combineReducers({
-    auth,
-    events,
-    games,
-    players
-});
+export {
+    authReducer,
+    eventsReducer,
+    gamesReducer,
+    playersReducer
+};
 
-export default rootReducer;
