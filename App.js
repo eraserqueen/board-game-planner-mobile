@@ -5,6 +5,9 @@ import {store, persistor} from "./src/store";
 import AuthWrapper from "./src/AuthWrapper";
 
 class App extends Component {
+    componentDidMount(){
+        console.ignoredYellowBox = ['Warning: isMounted(...)', 'Remote debugger is in a background tab', '(ADVICE)'];
+    }
     render() {
         return (
             <Provider store={store}>
