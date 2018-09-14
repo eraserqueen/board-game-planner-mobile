@@ -4,18 +4,26 @@ import uuid from "uuid";
 export default function init(options) {
     const client = authClient.init(options.token);
 
-    const parseEvent = event => ({
-        ...event,
-        dateTimeStart: new Date(event.dateTimeStart),
-        dateTimeEnd: new Date(event.dateTimeEnd)
-    });
+    const parseResponse = response => {
+        if(response.ok) {
+            return response.json();
+        }
+        return Promise.reject('unexpected response from server: '+ response.status);
+    };
+    const parseEvent = event =>
+        ({
+            ...event,
+            dateTimeStart: new Date(event.dateTimeStart),
+            dateTimeEnd: new Date(event.dateTimeEnd)
+        });
 
+    const logErrorToConsole = error => console.error(error);
 
     function getAll() {
         return client.fetch(`/events?dateTimeEnd_gte=${(new Date()).toISOString()}`)
-            .then(response => response.json())
+            .then(parseResponse)
             .then(json => json.map(parseEvent))
-            .catch(error => console.error(error));
+            .catch(logErrorToConsole);
     }
 
     function addEvent({dateTimeStart, dateTimeEnd}) {
@@ -28,9 +36,9 @@ export default function init(options) {
                     dateTimeEnd: dateTimeEnd.toISOString(),
                 })
             })
-            .then(response => response.json())
-            .then(json => parseEvent(json))
-            .catch(error => console.error(error));
+            .then(parseResponse)
+            .then(parseEvent)
+            .catch(logErrorToConsole);
     }
 
     function updateEvent(event, options = {runScheduler: false}) {
@@ -42,9 +50,9 @@ export default function init(options) {
                     dateTimeEnd: event.dateTimeEnd.toISOString(),
                 }))
             })
-            .then(response => response.json())
-            .then(json => parseEvent(json))
-            .catch(error => console.error(error));
+            .then(parseResponse)
+            .then(parseEvent)
+            .catch(logErrorToConsole);
     }
 
     function deleteById(id) {
@@ -52,9 +60,9 @@ export default function init(options) {
             {
                 method: 'DELETE'
             })
-            .then(response => response.json())
-            .then(json => parseEvent(json))
-            .catch(error => console.error(error));
+            .then(parseResponse)
+            .then(parseEvent)
+            .catch(logErrorToConsole);
     }
 
     return ({
